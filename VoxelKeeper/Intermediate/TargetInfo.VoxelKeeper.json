@@ -1,0 +1,14 @@
+{
+	"Targets": [
+		{
+			"Name": "VoxelKeeper",
+			"Path": "C:\\Users\\Joshua Simpson\\Documents\\GitHub\\Unreal_VoxelKeeper\\VoxelKeeper\\Source\\VoxelKeeper.Target.cs",
+			"Type": "Game"
+		},
+		{
+			"Name": "VoxelKeeperEditor",
+			"Path": "C:\\Users\\Joshua Simpson\\Documents\\GitHub\\Unreal_VoxelKeeper\\VoxelKeeper\\Source\\VoxelKeeperEditor.Target.cs",
+			"Type": "Editor"
+		}
+	]
+}
