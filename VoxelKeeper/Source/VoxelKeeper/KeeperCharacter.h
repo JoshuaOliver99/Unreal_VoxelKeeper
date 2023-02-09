@@ -67,13 +67,13 @@ private:
 
 	APlayerController* KeeperPlayerController;
 	
-	// ----- Movement
+	// ----- Movement Implementation
 	UPROPERTY(EditAnywhere)
 	float BaseMoveSpeed = 100.0f;
 
 	UPROPERTY(EditAnywhere)
 	float BoostedMoveSpeed = 200.0f;
 
-	// ----- Rotation
+	// ----- Rotation Implementation
 	bool bAllowRotation = false;
 };

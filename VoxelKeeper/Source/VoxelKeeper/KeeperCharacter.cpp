@@ -2,8 +2,11 @@
 
 
 #include "KeeperCharacter.h"
+
+#include "CharacterBase.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -13,6 +16,7 @@ AKeeperCharacter::AKeeperCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
 }
 
 // Called every frame
@@ -39,7 +43,7 @@ void AKeeperCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		EnhancedInputComponent->BindAction(SecondayTappedInputAction, ETriggerEvent::Triggered, this, &AKeeperCharacter::SecondayTappedAction);
 		EnhancedInputComponent->BindAction(SecondayHeldInputAction, ETriggerEvent::Triggered, this, &AKeeperCharacter::SecondayHeldAction);
 		EnhancedInputComponent->BindAction(SecondayHeldInputAction, ETriggerEvent::Completed, this, &AKeeperCharacter::SecondayHeldAction);
-
+	
 		EnhancedInputComponent->BindAction(SpeedModifierInputAction, ETriggerEvent::Triggered, this, &AKeeperCharacter::ModifyMoveSpeed);
 		EnhancedInputComponent->BindAction(SpeedModifierInputAction, ETriggerEvent::Completed, this, &AKeeperCharacter::ModifyMoveSpeed);
 	}
@@ -121,10 +125,38 @@ void AKeeperCharacter::PrimaryTappedAction(const FInputActionValue& Value)
 	}
 	
 	FHitResult HitResult;
-	KeeperPlayerController->GetHitResultUnderCursor(ECC_Visibility, false, HitResult);
-	
-	DrawDebugSphere(GetWorld(), HitResult.Location, 10.f, 12, FColor::Green, false, 5.f);
+	KeeperPlayerController->GetHitResultUnderCursor(ECC_Camera, false, HitResult);
 
+	// Debug
+	DrawDebugSphere(GetWorld(), HitResult.Location, 10.f, 12, FColor::Green, false, 5.f);
+	UE_LOG(LogTemp, Warning, TEXT("PrimaryTapped: %s"), *HitResult.GetActor()->GetActorNameOrLabel());
+
+	// TODO:
+	// Possess a minion
+	ACharacterBase* CharacterBase = Cast<ACharacterBase>(HitResult.GetComponent()->GetOwner());
+	if (CharacterBase)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ACharacterBase Found!.. %s"), *HitResult.GetActor()->GetActorNameOrLabel());
+
+		// Possess
+		// Source: http://jollymonsterstudio.com/2019/09/05/unreal-engine-c-fundamentals-character-possession-and-changing-materials/
+		
+		// save a copy of our controller
+		AController* SavedController = GetController();
+		// unpossess first ( helps with multiplayer )
+		SavedController->UnPossess();
+		// disable movement mode
+		GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
+		// possess our new actor
+		SavedController->Possess(Cast<APawn>(CharacterBase));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ACharacterBase NOT found: %s"), *HitResult.GetActor()->GetActorNameOrLabel());
+
+	}
+	
+	
 	// TODO:
 	// Grab a minion
 	// Tag a Tile
