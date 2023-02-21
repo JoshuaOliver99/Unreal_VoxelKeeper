@@ -72,5 +72,8 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	float BoostedMoveSpeed = 200.0f;
-	
+
+	// TODO
+	// ----- Stats
+	// Health, Stamina, Mana, Wage, Temperament, Buffs
 };
